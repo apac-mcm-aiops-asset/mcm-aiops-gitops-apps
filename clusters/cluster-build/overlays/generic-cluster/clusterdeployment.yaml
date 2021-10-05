@@ -1,0 +1,34 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: ${cluster}
+  annotations:
+     hive.openshift.io/disable-install-log-password-redaction: "true"
+  namespace: ${cluster}
+  labels:
+    cloud: ${provider}
+    region: ${provider_region}
+    vendor: OpenShift
+spec:
+  baseDomain: ${basedomain}
+  clusterName: ${cluster}
+  controlPlaneConfig:
+    servingCertificates: {}
+  installAttemptsLimit: 2
+  installed: false
+  platform:
+    ${provider}:
+      credentialsSecretRef:
+        name: ${cluster}-${provider}-creds
+      region: ${provider_region}
+  provisioning:
+    installConfigSecretRef:
+      name: ${cluster}-install-config
+    sshPrivateKeySecretRef:
+      name: ${cluster}-ssh-private-key
+    imageSetRef:
+    #   name: ${ocpversion}
+    #   quay.io/openshift-release-dev/ocp-release:${ocpversion}-x86_64
+      name: img${ocpversion}-x86-64-appsub
+  pullSecretRef:
+    name: ${cluster}-pull-secret

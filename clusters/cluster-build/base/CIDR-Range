@@ -1,0 +1,45 @@
+vsphere-swinney-cluster ->
+
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineCIDR: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.128.0.0/16
+
+vsphere-eltham-cluster ->
+
+networking:
+  clusterNetwork:
+  - cidr: 10.132.0.0/14
+    hostPrefix: 23
+  machineCIDR: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.132.0.0/16
+
+aws-cluster ->
+
+networking:
+  clusterNetwork:
+  - cidr: 10.136.0.0/14
+    hostPrefix: 23
+  machineCIDR: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.136.0.0/16
+
+Region = ap-northeast-1
+
+azure ->
+
+networking:
+  clusterNetwork:
+  - cidr: 10.140.0.0/14
+    hostPrefix: 23
+  machineCIDR: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.140.0.0/16
