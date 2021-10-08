@@ -9,6 +9,7 @@ spec:
   clusterLabels:
     cloud: vSphere
     vendor: OpenShift
+    argocd: true
   applicationManager:
     enabled: true
   certPolicyController:

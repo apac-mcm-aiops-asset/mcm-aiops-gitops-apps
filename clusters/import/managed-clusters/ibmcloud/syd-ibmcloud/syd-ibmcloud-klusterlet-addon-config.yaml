@@ -13,6 +13,7 @@ spec:
   clusterLabels:
     cloud: auto-detect
     vendor: auto-detect
+    argocd: true
   iamPolicyController:
     enabled: true
   policyController:
