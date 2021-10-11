@@ -6,6 +6,5 @@ metadata:
     vendor: OpenShift
     name: syd-ibmcloud
     cloud: IBM Cloud 
-    argocd: true
 spec:
   hubAcceptsClient: true
