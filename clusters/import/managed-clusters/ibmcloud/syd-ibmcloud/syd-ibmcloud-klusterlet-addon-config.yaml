@@ -6,14 +6,14 @@ metadata:
 spec:
   clusterName: syd-ibmcloud
   clusterNamespace: syd-ibmcloud
-  applicationManager:
-    enabled: true
-  certPolicyController:
-    enabled: true
   clusterLabels:
     cloud: auto-detect
     vendor: auto-detect
-    argocd: true
+  applicationManager:
+    enabled: true
+    argocdCluster: true
+  certPolicyController:
+    enabled: true
   iamPolicyController:
     enabled: true
   policyController:
