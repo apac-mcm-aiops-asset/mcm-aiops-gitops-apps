@@ -1,0 +1,137 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: {{ .Values.cluster }} 
+  namespace: {{ .Values.namepsace }}
+  labels:
+    cloud: 'vSphere'
+    vendor: 'OpenShift'
+spec:
+  baseDomain: {{ .Values.provider.baseDomain }}
+  clusterName: {{ .Values.cluster }} 
+  controlPlaneConfig:
+    servingCertificates: {}
+  installAttemptsLimit: 2
+  installed: false
+  platform:
+    vsphere:
+      cluster: {{ .Values.provider.vmClusterName }} 
+      certificatesSecretRef:
+        name: {{ .Values.cluster }}-vsphere-certs
+      credentialsSecretRef:
+        name: {{ .Values.cluster }}-vsphere-creds
+      vCenter: {{ .Values.provider.vcenter }} 
+      datacenter: {{ .Values.provider.datacenter }} 
+      defaultDatastore: {{ .Values.provider.datastore }} 
+      network: {{ .Values.network.networkName }} 
+  provisioning:
+    installConfigSecretRef:
+      name: {{ .Values.cluster }}-install-config
+    sshPrivateKeySecretRef:
+      name: {{ .Values.cluster }}-ssh-private-key
+    imageSetRef:
+       #quay.io/openshift-release-dev/ocp-release:4.7.32-x86_64
+      name: img4.7.32-x86-64-appsub
+  pullSecretRef:
+    name: {{ .Values.cluster }}-pull-secret
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  labels:
+    cloud: vSphere
+    name: {{ .Values.cluster }} 
+    vendor: OpenShift
+  name: {{ .Values.cluster }} 
+spec:
+  hubAcceptsClient: true
+---
+apiVersion: hive.openshift.io/v1
+kind: MachinePool
+metadata:
+  name: {{ .Values.cluster }}-worker
+  namespace: {{ .Values.namespace }}
+spec:
+  clusterDeploymentRef:
+    name: {{ .Values.cluster }}
+  name: worker
+  platform:
+    vsphere:
+      cpus: {{ .Values.workers.cpus }}
+      coresPerSocket: {{ .Values.workers.coresPerSocket }}
+      memoryMB: {{ .Values.workers.memoryMB }}
+      osDisk:
+        diskSizeGB: {{ .Values.workers.diskGB }}
+  replicas: {{ .Values.workers.count }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.cluster }}-pull-secret
+  namespace: {{ .Values.cluster }}
+stringData:
+  .dockerconfigjson: {{ .Values.provider.pullSecret | quote }}
+   
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.cluster }}-install-config
+  namespace: {{ .Values.namespace }} 
+type: Opaque
+data:
+  # Base64 encoding of install-config yaml
+  install-config.yaml: {{ include "install-config.tpl" . | b64enc}} 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.cluster }}-ssh-private-key
+  namespace: {{ .Values.namespace }}
+stringData:
+  ssh-privatekey: {{ .Values.provider.sshPrivatekey | b64enc }}
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Values.cluster }}-vsphere-creds
+  namespace: {{ .Values.namespace }}
+stringData:
+  username: {{ .Values.provider.username | b64enc}} 
+  password: {{ .Values.provider.password | b64enc}}  
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Values.cluster }}-vsphere-certs
+  namespace: {{ .Values.namespace }}
+data:
+  .cacert: {{ .Values.provider.cacertificate | b64enc }}
+  
+---
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: {{ .Values.cluster }}
+  namespace: {{ .Values.namespace }}
+spec:
+  clusterName: {{ .Values.cluster }}
+  clusterNamespace: {{ .Values.namespace }}
+  clusterLabels:
+    cloud: vSphere
+    vendor: OpenShift
+  applicationManager:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  iamPolicyController:
+    enabled: true
+  version: 2.2.0
