@@ -5,6 +5,5 @@ metadata:
   labels:
     vendor: OpenShift
     name: syd-ibmcloud
-    cloud: IBM Cloud 
 spec:
   hubAcceptsClient: true
