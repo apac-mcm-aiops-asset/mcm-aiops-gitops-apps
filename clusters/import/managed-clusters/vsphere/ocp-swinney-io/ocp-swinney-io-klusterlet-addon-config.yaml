@@ -9,14 +9,11 @@ spec:
   clusterLabels:
     cloud: vSphere
     vendor: OpenShift
-    argocd: true
   applicationManager:
     enabled: true
+    argocdCluster: true
   certPolicyController:
     enabled: true
-  clusterLabels:
-    cloud: auto-detect
-    vendor: auto-detect
   iamPolicyController:
     enabled: true
   policyController:
