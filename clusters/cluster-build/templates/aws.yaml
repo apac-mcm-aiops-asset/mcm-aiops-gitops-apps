@@ -1,0 +1,124 @@
+{{ if eq .Values.type "aws" }}
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: '{{ .Values.name }}'
+  namespace: '{{ .Values.namespace}}'
+  labels:
+    cloud: 'AWS'
+    region: '{{ .Values.provider.region }}'
+    vendor: 'OpenShift'
+spec:
+  baseDomain: {{ .Values.provider.baseDomain }}
+  clusterName: '{{ .Values.name }}'
+  controlPlaneConfig:
+    servingCertificates: {}
+  installAttemptsLimit: 2
+  installed: false
+  platform:
+    aws:
+      credentialsSecretRef:
+        name: {{ .Values.name }}-aws-creds
+      region: {{ .Values.provider.region }}
+  provisioning:
+    installConfigSecretRef:
+      name: {{ .Values.name }}-install-config
+    sshPrivateKeySecretRef:
+      name: {{ .Values.name }}-ssh-private-key
+    imageSetRef:
+       #quay.io/openshift-release-dev/ocp-release:4.7.32-x86_64
+      name: img4.7.32-x86-64-appsub
+  pullSecretRef:
+    name: {{ .Values.name }}-pull-secret
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  labels:
+    cloud: Amazon
+    region: {{ .Values.provider.region }}
+    name: '{{ .Values.name }}'
+    vendor: OpenShift
+  name: '{{ .Values.name }}'
+spec:
+  hubAcceptsClient: true
+---
+apiVersion: hive.openshift.io/v1
+kind: MachinePool
+metadata:
+  name: {{ .Values.name }}-worker
+  namespace: '{{ .Values.namespace }}'
+spec:
+  clusterDeploymentRef:
+    name: '{{ .Values.name }}'
+  name: worker
+  platform:
+    aws:
+      rootVolume:
+        iops: {{ .Values.workers.diskIops }}
+        size: {{ .Values.workers.diskSize }}
+        type: {{ .Values.workers.diskType }}
+      type: {{ .Values.workers.machineType }}
+  replicas: {{ .Values.workers.count }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.name }}-pull-secret
+  namespace: '{{ .Values.namespace }}'
+stringData:
+  .dockerconfigjson: {{ .Values.provider.pullSecret | quote }}
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.name }}-install-config
+  namespace: '{{ .Values.namespace }}'
+type: Opaque
+data:
+  # Base64 encoding of install-config yaml
+  install-config.yaml: {{ include "install-config.provider.tpl" . | b64enc}} 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.name }}-ssh-private-key
+  namespace: '{{ .Values.namespace }}'
+stringData:
+  ssh-privatekey: {{- template "privateKey-embed" . }} 
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ .Values.name }}-aws-creds
+  namespace: '{{ .Values.namespace }}'
+stringData:
+  aws_access_key_id: {{ .Values.provider.aws_access_key_id }}
+  aws_secret_access_key: {{ .Values.provider.aws_secret_access_key }}
+---
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: '{{ .Values.name }}'
+  namespace: '{{ .Values.namespace }}'
+spec:
+  clusterName: '{{ .Values.name }}'
+  clusterNamespace: '{{ .Values.namespace}}'
+  clusterLabels:
+    cloud: Amazon
+    vendor: OpenShift
+  applicationManager:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  iamPolicyController:
+    enabled: true
+  version: 2.2.0
+{{ end }}

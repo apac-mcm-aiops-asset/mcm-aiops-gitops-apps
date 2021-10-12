@@ -1,8 +1,4 @@
-{{- define "privateKey-embed" }}
-{{- print " | " }}
-{{- printf "%s" .Values.provider.sshPrivatekey . | toYaml | indent 8 }}
-{{- end }}
-
+{{ if eq .Values.type "vsphere" }}
 apiVersion: hive.openshift.io/v1
 kind: ClusterDeployment
 metadata:
@@ -89,7 +85,7 @@ metadata:
 type: Opaque
 data:
   # Base64 encoding of install-config yaml
-  install-config.yaml: {{ include "install-config.tpl" . | b64enc}} 
+  install-config.yaml: {{ include "install-config.vsphere.tpl" . | b64enc}} 
 ---
 apiVersion: v1
 kind: Secret
@@ -97,9 +93,8 @@ metadata:
   name: {{ .Values.cluster }}-ssh-private-key
   namespace: {{ .Values.namespace }}
 stringData:
-  blah: "blah"
-  ssh-privatekey:  {{- template "privateKey-embed" }}
-type: Opaque
+  ssh-privatekey: {{- template "privateKey-embed" . }} 
+type: Opaque     
 ---
 apiVersion: v1
 kind: Secret
@@ -108,8 +103,8 @@ metadata:
   name: {{ .Values.cluster }}-vsphere-creds
   namespace: {{ .Values.namespace }}
 stringData:
-  username: {{ .Values.provider.username | b64enc}} 
-  password: {{ .Values.provider.password | b64enc}}  
+  username: {{ .Values.provider.username }} 
+  password: {{ .Values.provider.password }}  
 ---
 apiVersion: v1
 kind: Secret
@@ -117,8 +112,8 @@ type: Opaque
 metadata:
   name: {{ .Values.cluster }}-vsphere-certs
   namespace: {{ .Values.namespace }}
-data:
-  .cacert: {{ .Values.provider.cacertificate | quote }}
+stringData:
+  .cacert: {{- template "cacert-embed" . }}
   
 ---
 apiVersion: agent.open-cluster-management.io/v1
@@ -143,3 +138,4 @@ spec:
   iamPolicyController:
     enabled: true
   version: 2.2.0
+  {{ end }}

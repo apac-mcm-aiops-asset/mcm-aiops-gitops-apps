@@ -1,7 +1,7 @@
-{{- define "install-config.tpl" -}}
+{{- define "install-config.vsphere.tpl" -}}
 apiVersion: v1
 metadata:
-  name: {{ .Values.cluster }} 
+  name: '{{ .Values.cluster }}' 
 baseDomain: {{ .Values.provider.baseDomain }}
 controlPlane:
   hyperthreading: Enabled
@@ -37,5 +37,6 @@ platform:
     ingressVIP: {{ .Values.network.ingressVIP }}
     network: {{ .Values.network.networkName }}
 pullSecret: "" # skip, hive will inject based on it's secrets
-sshKey: {{ .Values.provider.sshPublickey }}
+sshKey: |-
+    {{ .Values.provider.sshPublickey }}
 {{- end }}    
