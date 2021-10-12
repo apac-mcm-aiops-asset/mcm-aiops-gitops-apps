@@ -23,7 +23,7 @@ spec:
             exclude:
               - kube-*
             include:
-              - default
+              - openshift-gitops
           object-templates:
             - complianceType: musthave
               objectDefinition:
