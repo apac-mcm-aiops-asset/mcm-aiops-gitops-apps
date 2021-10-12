@@ -1,0 +1,15 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: ibm-cp4i-argocd-aws-cluster
+  namespace: openshift-gitops
+  labels:
+    app: ibm-cp4i-argocd
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions: []
+    matchLabels:
+      name: mcm-gitops-argocd
