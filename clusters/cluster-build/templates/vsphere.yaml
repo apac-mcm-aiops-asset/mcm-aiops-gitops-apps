@@ -1,14 +1,21 @@
+{{- define "privateKey-embed" }}
+{{- print " | " }}
+{{- printf "%s" .Values.provider.sshPrivatekey . | toYaml | indent 8 }}
+{{- end }}
+
 apiVersion: hive.openshift.io/v1
 kind: ClusterDeployment
 metadata:
-  name: {{ .Values.cluster }} 
-  namespace: {{ .Values.namepsace }}
+  name: '{{ .Values.cluster }}'
+  namespace: '{{ .Values.namespace }}'
   labels:
     cloud: 'vSphere'
     vendor: 'OpenShift'
+    hive.openshift.io/cluster-platform: vsphere
+
 spec:
   baseDomain: {{ .Values.provider.baseDomain }}
-  clusterName: {{ .Values.cluster }} 
+  clusterName: '{{ .Values.cluster }}'
   controlPlaneConfig:
     servingCertificates: {}
   installAttemptsLimit: 2
@@ -40,9 +47,9 @@ kind: ManagedCluster
 metadata:
   labels:
     cloud: vSphere
-    name: {{ .Values.cluster }} 
+    name: '{{ .Values.cluster }}'
     vendor: OpenShift
-  name: {{ .Values.cluster }} 
+  name: '{{ .Values.cluster }}'
 spec:
   hubAcceptsClient: true
 ---
@@ -50,10 +57,10 @@ apiVersion: hive.openshift.io/v1
 kind: MachinePool
 metadata:
   name: {{ .Values.cluster }}-worker
-  namespace: {{ .Values.namespace }}
+  namespace: '{{ .Values.namespace }}'
 spec:
   clusterDeploymentRef:
-    name: {{ .Values.cluster }}
+    name: '{{ .Values.cluster }}'
   name: worker
   platform:
     vsphere:
@@ -90,7 +97,8 @@ metadata:
   name: {{ .Values.cluster }}-ssh-private-key
   namespace: {{ .Values.namespace }}
 stringData:
-  ssh-privatekey: {{ .Values.provider.sshPrivatekey | b64enc }}
+  blah: "blah"
+  ssh-privatekey:  {{- template "privateKey-embed" }}
 type: Opaque
 ---
 apiVersion: v1
@@ -110,17 +118,17 @@ metadata:
   name: {{ .Values.cluster }}-vsphere-certs
   namespace: {{ .Values.namespace }}
 data:
-  .cacert: {{ .Values.provider.cacertificate | b64enc }}
+  .cacert: {{ .Values.provider.cacertificate | quote }}
   
 ---
 apiVersion: agent.open-cluster-management.io/v1
 kind: KlusterletAddonConfig
 metadata:
-  name: {{ .Values.cluster }}
-  namespace: {{ .Values.namespace }}
+  name: '{{ .Values.cluster }}'
+  namespace: '{{ .Values.namespace }}'
 spec:
-  clusterName: {{ .Values.cluster }}
-  clusterNamespace: {{ .Values.namespace }}
+  clusterName: '{{ .Values.cluster }}'
+  clusterNamespace: '{{ .Values.namespace }}'
   clusterLabels:
     cloud: vSphere
     vendor: OpenShift
