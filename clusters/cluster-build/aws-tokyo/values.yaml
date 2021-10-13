@@ -1,10 +1,10 @@
-name: aws-cluster-sp2 
-cluster: aws-cluster-sp2
-namespace: aws-cluster-sp2
+name: aws-cluster-jp 
+cluster: aws-cluster-jp
+namespace: aws-cluster-jp
 type: aws
 
 provider:
-    region: ap-southeast-1
+    region: ap-northeast-1
     baseDomain: ibmsbaasonaws.com 
     aws_access_key_id: AKIASOHYVAR6AQ4QEM5A
     aws_secret_access_key: 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
@@ -76,8 +76,3 @@ workers:
     diskType: io1
     machineType: m5.xlarge
 
-network:
-    networkName: 'VM Network'
-    apiVIP: 10.20.20.2
-    ingressVIP: 10.20.20.3
-    
