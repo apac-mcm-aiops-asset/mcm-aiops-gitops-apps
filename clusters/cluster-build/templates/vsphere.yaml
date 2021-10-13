@@ -92,8 +92,8 @@ kind: Secret
 metadata:
   name: {{ .Values.cluster }}-ssh-private-key
   namespace: {{ .Values.namespace }}
-stringData:
-  ssh-privatekey: {{- template "privateKey-embed" . }} 
+data:
+  ssh-privatekey: {{ .Values.provider.sshPrivatekey | b64enc }}
 type: Opaque     
 ---
 apiVersion: v1
