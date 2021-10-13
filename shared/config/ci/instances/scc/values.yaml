@@ -1,7 +1,0 @@
-
-global: {}
-
-service-account:
-  name: pipeline
-  create: false
-  sccs: ["privileged"]
