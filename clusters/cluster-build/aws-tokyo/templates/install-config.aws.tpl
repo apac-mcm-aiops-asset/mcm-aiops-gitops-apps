@@ -1,4 +1,4 @@
-{{- define "install-config.provider.tpl" }}
+{{- define "install-config.aws.tpl" }}
 apiVersion: v1
 metadata:
   name: '{{ .Values.cluster }}' 
