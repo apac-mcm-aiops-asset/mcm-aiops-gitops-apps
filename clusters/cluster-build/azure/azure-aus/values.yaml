@@ -13,10 +13,10 @@ provider:
 masters:
     count: 3
     diskSize: 128 
-    machineType: Standard_D4s-v3
+    machineType: Standard_D4s_v3
 
 workers:
     count: 3
     diskSize: 128
-    machineType: Standard_D2s_v3 
+    machineType: Standard_D4s_v3 
 

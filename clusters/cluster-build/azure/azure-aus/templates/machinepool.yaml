@@ -10,10 +10,10 @@ spec:
   platform:
     azure:
       osDisk:
-        diskSizeGB: 128
-      type: Standard_D2s_v3
+        diskSizeGB: {{ .Values.workers.diskSize }} 
+      type: {{ .Values.workers.machineType }}
       zones:
       - "1"
       - "2"
       - "3"
-  replicas: 3
+  replicas: {{ .Values.workers.count }} 
