@@ -42,6 +42,10 @@ spec:
                   source: redhat-operators
                   sourceNamespace: openshift-marketplace
                   startingCSV: openshift-gitops-operator.v1.2.1
+                  config:
+                    env:
+                    - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+                      value: 'TRUE'
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
