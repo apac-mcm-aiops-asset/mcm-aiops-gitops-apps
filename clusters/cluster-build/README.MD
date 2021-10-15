@@ -7,13 +7,14 @@ to take pre-configured environment variables and encrypt them so they are suitab
 2. update the values files for  your deployment
 3. create the environment variables (see below whats required for the different cloud providers)
 4. ./make_secret.sh
+5. git commit or use helm to deploy
 
 AWS:
 - AWS_KEY - the AWS secret access key
 - AWS_ID - AWS access ID
 - SSH_PRIV_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa)
 - PULL_SECRET - the open shift pull secret
-- DEPLOYMENT_NAME - the name of the deployment - must align with the cluster item in the values.yaml file
+- CLUSTER_NAME - the name of the deployment - must align with the cluster item in the values.yaml file
 
 
 AZURE
@@ -23,6 +24,15 @@ AZURE
 - AZ_SUB_ID - Azure Subscription ID
 - SSH_PRIV_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa)
 - PULL_SECRET - the open shift pull secret
-- DEPLOYMENT_NAME - the name of the deployment - must align with the cluster item in the values.yaml file
+- CLUSTER_NAME - the name of the deployment - must align with the cluster item in the values.yaml file
+
+VSPHERE
+- VSPH_PASS - vSphere user
+- VSPH_USER - vSphere password
+- VSPH_PUB_CA_FILE - File path to the the public CA certificate of the vSphere server
+- SSH_PUB_FILE - File path to the SSH Pub Key (eg ~/.ssh/id_rsa.pub)
+- SSH_PRIV_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa)
+- PULL_SECRET - the open shift pull secret
+- CLUSTER_NAME - the name of the deployment - must align with the cluster 
 
 Note: Currently the SSH Public Key is not made secret but is still required to be included in values files.
