@@ -31,8 +31,8 @@ if [[ -z ${PULL_SECRET} ]]; then
   exit 1
 fi
 
-if [[ -z ${DEPLOYMENT_NAME} ]]; then
-  echo "Please provide environment varaible for DEPLOYMENT_NAME, which is the name of the cluster, this should be the same in the values file."
+if [[ -z ${CLUSTER_NAME} ]]; then
+  echo "Please provide environment varaible for CLUSTER_NAME, which is the name of the cluster, this should be the same in the values file."
   exit 1
 fi
 
@@ -44,9 +44,9 @@ AZ_ID='{"clientId": "'$AZ_CLIENT_ID'", "clientSecret": "'$AZ_CLIENT_KEY'", "tena
 
 # Encrypt the secret using kubeseal and private key from the cluster
 echo "Creating Secrets"
-ENC_AZ_ID=$(echo -n ${AZ_ID} | kubeseal --raw --name=$DEPLOYMENT_NAME-azure-creds --namespace=$DEPLOYMENT_NAME --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
-ENC_PULL_SECRET=$(echo -n ${PULL_SECRET} | kubeseal --raw --name=$DEPLOYMENT_NAME-pull-secret --namespace=$DEPLOYMENT_NAME --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
-ENC_SSH_PRIV=$(cat ${SSH_PRIV_FILE} | kubeseal --raw --name=$DEPLOYMENT_NAME-ssh-private-key --namespace=$DEPLOYMENT_NAME  --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
+ENC_AZ_ID=$(echo -n ${AZ_ID} | kubeseal --raw --name=$CLUSTER_NAME-azure-creds --namespace=$CLUSTER_NAME --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
+ENC_PULL_SECRET=$(echo -n ${PULL_SECRET} | kubeseal --raw --name=$CLUSTER_NAME-pull-secret --namespace=$CLUSTER_NAME --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
+ENC_SSH_PRIV=$(cat ${SSH_PRIV_FILE} | kubeseal --raw --name=$CLUSTER_NAME-ssh-private-key --namespace=$CLUSTER_NAME  --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
 
 
 sed -i '' -e 's#.*azure_creds.*$#    azure_creds: '$ENC_AZ_ID'#g' values.yaml
