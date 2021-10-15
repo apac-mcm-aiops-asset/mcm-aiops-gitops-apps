@@ -12,7 +12,12 @@ if [[ -z ${AWS_ID} ]]; then
 fi
 
 if [[ -z ${SSH_PRIV_FILE} ]]; then
-  echo "Please provide environment variable SSH_PRIV_FILE"
+  echo "Please provide environment variable SSH_PRIV_FILE, containing a file path to an ssh private certificate"
+  exit 1
+fi
+
+if [[ -z ${SSH_PUB_FILE} ]]; then
+  echo "Please provide environment variable SSH_PUB_FILE, containing a file path to an ssh public key "
   exit 1
 fi
 
@@ -29,6 +34,17 @@ fi
 SEALED_SECRET_NAMESPACE=${SEALED_SECRET_NAMESPACE:-sealed-secrets}
 SEALED_SECRET_CONTROLLER_NAME=${SEALED_SECRET_CONTROLLER_NAME:-sealed-secrets}
 
+#read in public ssh key
+ssh_pub_key=$(cat ${SSH_PUB_FILE})
+
+#generate the install-config.yaml, we need to copy it to the templates folder for helm to render it...whhy?
+cp install-config/install-config.aws.yaml templates/
+
+install_config=$(helm template install-config . -s templates/install-config.aws.yaml --set provider.sshPublickey="$ssh_pub_key" --values values.yaml | sed -e '/---/d' -e '/Source/d')
+#remove the install config from templates so helm doesnt try to install it
+rm templates/install-config.aws.yaml
+ENC_INST_CFG=$(echo -n "$install_config" | kubeseal --raw --name=$CLUSTER_NAME-install-config --namespace=$CLUSTER_NAME --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
+
 
 # Encrypt the secret using kubeseal and private key from the cluster
 echo "Creating Secrets"
@@ -37,8 +53,9 @@ ENC_AWS_KEY=$(echo -n ${AWS_KEY} | kubeseal --raw --name=$CLUSTER_NAME-aws-creds
 ENC_PULL_SECRET=$(echo -n ${PULL_SECRET} | kubeseal --raw --name=$CLUSTER_NAME-pull-secret --namespace=$CLUSTER_NAME --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
 ENC_SSH_PRIV=$(cat ${SSH_PRIV_FILE} | kubeseal --raw --name=$CLUSTER_NAME-ssh-private-key --namespace=$CLUSTER_NAME  --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
 
-
+echo "Updating values file with encrypted secrets"
 sed -i '' -e 's#.*aws_access_key_id.*$#    aws_access_key_id: '$ENC_AWS_ID'#g' values.yaml
 sed -i '' -e 's#.*aws_secret_access_key.*$#    aws_secret_access_key: '$ENC_AWS_KEY'#g' values.yaml
 sed -i '' -e 's#.*pullSecret.*$#    pullSecret: '$ENC_PULL_SECRET'#g' values.yaml
 sed -i '' -e 's#.*sshPrivatekey.*$#    sshPrivatekey: '$ENC_SSH_PRIV'#g' values.yaml
+sed -i '' -e 's#.*installConfig.*$#    installConfig: '$ENC_INST_CFG'#g' values.yaml
