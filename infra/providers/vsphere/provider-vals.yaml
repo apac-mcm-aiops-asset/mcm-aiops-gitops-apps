@@ -1,0 +1,14 @@
+name: vsphere-eltham 
+namespace: eltham-vsphere 
+provider:
+    username: administrator@vsphere.local
+    password: 
+    vcenter: 
+    cacertificate: 
+    vmClusterName: 
+    datacenter: 
+    datastore: 
+    baseDomain: 
+    pullSecret: 
+    sshPrivatekey: 
+    sshPublickey: 

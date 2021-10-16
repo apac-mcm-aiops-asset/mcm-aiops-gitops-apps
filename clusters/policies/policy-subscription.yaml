@@ -6,7 +6,7 @@ metadata:
   labels:
     app: cluster-policies
   annotations:
-      apps.open-cluster-management.io/github-path: cluster-configs/policy-files
+      apps.open-cluster-management.io/github-path: common-cluster-configs/policy-files
 spec:
   channel: cluster-policies/cluster-policies
   placement:

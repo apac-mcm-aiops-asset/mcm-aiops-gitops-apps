@@ -13,7 +13,6 @@ spec:
   controlPlaneConfig:
     servingCertificates: {}
   installAttemptsLimit: 2
-  installed: false
   platform:
     azure:
       baseDomainResourceGroupName: {{ .Values.provider.resource_group }}
