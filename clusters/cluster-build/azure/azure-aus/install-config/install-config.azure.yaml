@@ -1,4 +1,3 @@
-{{- define "install-config.azure.tpl" }}
 apiVersion: v1
 metadata:
   name: '{{ .Values.cluster }}'
@@ -40,4 +39,3 @@ platform:
 pullSecret: "" # skip, hive will inject based on it's secrets
 sshKey: |-
    {{ .Values.provider.sshPublickey }}
-{{- end }}
