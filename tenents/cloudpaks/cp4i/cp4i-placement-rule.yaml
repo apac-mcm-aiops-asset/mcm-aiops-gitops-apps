@@ -1,7 +1,7 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: ibm-cp4i-argocd-aws-cluster
+  name: ibm-cp4i-argocd
   namespace: openshift-gitops
   labels:
     app: ibm-cp4i-argocd
@@ -12,4 +12,5 @@ spec:
   clusterSelector:
     matchExpressions: []
     matchLabels:
+      # Replace value with Cluster you wish to provision too.
       name: mcm-gitops-argocd

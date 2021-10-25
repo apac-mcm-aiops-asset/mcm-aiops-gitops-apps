@@ -13,9 +13,7 @@ AWS:
 - AWS_KEY - the AWS secret access key
 - AWS_ID - AWS access ID
 - SSH_PRIV_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa)
-- SSH_PUB_FILE - File path to your SSH Public Key (eg ~/.ssh/id_rsa.pub)
 - PULL_SECRET - the open shift pull secret
-- CLUSTER_NAME - the name of the deployment - must align with the cluster item in the values.yaml file
 
 
 AZURE
@@ -26,7 +24,6 @@ AZURE
 - SSH_PRIV_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa)
 - SSH_PUB_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa.pub)
 - PULL_SECRET - the open shift pull secret
-- CLUSTER_NAME - the name of the deployment - must align with the cluster item in the values.yaml file
 
 VSPHERE
 - VSPH_PASS - vSphere user
@@ -35,6 +32,5 @@ VSPHERE
 - SSH_PUB_FILE - File path to the SSH Pub Key (eg ~/.ssh/id_rsa.pub)
 - SSH_PRIV_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa)
 - PULL_SECRET - the open shift pull secret
-- CLUSTER_NAME - the name of the deployment - must align with the cluster 
 
 Note: Currently the SSH Public Key is not made secret but is still required to be included in values files.
