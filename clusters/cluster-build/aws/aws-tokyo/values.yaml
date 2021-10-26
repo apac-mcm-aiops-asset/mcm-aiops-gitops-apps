@@ -1,5 +1,6 @@
 cluster: aws-cluster-jp
 type: aws
+imageName: img4.7.32-x86-64-appsub
 
 provider:
     region: ap-northeast-1
