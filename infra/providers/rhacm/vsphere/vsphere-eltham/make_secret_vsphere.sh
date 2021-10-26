@@ -19,17 +19,17 @@ function parse_yaml {
 
 # Set variables
 if [[ -z ${VSPH_USER} ]]; then
-  echo "Please provide environment variable AZ_CLIENT_KEY contining the Azure Client Secret"
+  echo "Please provide environment variable VSPH_USER contining the vcenter username"
   exit 1
 fi
 
 if [[ -z ${VSPH_PASS} ]]; then
-  echo "Please provide environment variable AZ_CLIENT_ID containg the Azure Client ID"
+  echo "Please provide environment variable VSPH_PASS containg the vcenter password"
   exit 1
 fi
 
 if [[ -z ${VSPH_VCENTER} ]]; then
-  echo "Please provide environment variable AZ_TEN_ID containing the Azure Tenant ID"
+  echo "Please provide environment variable VSPH_VCENTER containing the vcenter name"
   exit 1
 fi
 
@@ -50,11 +50,6 @@ fi
 
 if [[ -z ${PULL_SECRET} ]]; then
   echo "Please provide environment variable PULL_SECRET"
-  exit 1
-fi
-
-if [[ -z ${CLUSTER_NAME} ]]; then
-  echo "Please provide environment varaible for CLUSTER_NAME, which is the name of the cluster, this should be the same in the values file."
   exit 1
 fi
 
@@ -88,7 +83,7 @@ EOM
 
 echo "$provider_config"
 #remove the install config from templates so helm doesnt try to install it
-ENC_PROV_CFG=$(echo -n "$provider_config" | kubeseal --raw --name=$VALUES_cluster --namespace=default --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
+ENC_PROV_CFG=$(echo -n "$provider_config" | kubeseal --raw --name=$VALUES_connection_name --namespace=openshift-rhacm-providers --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
 
 # Encrypt the secret using kubeseal and private key from the cluster
 echo "Creating Secrets"

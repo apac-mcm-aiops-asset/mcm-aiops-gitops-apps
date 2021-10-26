@@ -2,15 +2,15 @@ apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
   creationTimestamp: null
-  name: {{ .Values.cluster }}
-  namespace: default 
+  name: {{ .Values.connection_name }}
+  namespace: openshift-rhacm-providers
 spec:
   encryptedData:
     metadata: {{ .Values.providerSecret }}
   template:
     metadata:
-      name: {{ .Values.cluster }}
-      namespace: default
+      name: {{ .Values.connection_name }}
+      namespace: openshift-rhacm-providers
       labels:
         cluster.open-cluster-management.io/cloudconnection: ''
         cluster.open-cluster-management.io/provider: aws 
