@@ -10,7 +10,7 @@ spec:
       type: ManagedClusterConditionAvailable
   clusterSelector:
     matchExpressions:
-      - key: vendor 
+      - key: argocd
         operator: In
         values:
-          - OpenShift 
+          - enabled 

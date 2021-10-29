@@ -8,9 +8,9 @@ metadata:
   annotations:
       apps.open-cluster-management.io/github-path: 0-bootstrap/single-cluster/bootstrap.yaml
 spec:
-  channel: openshift-gitops/ibm-cp4i-argocd
+  channel: ibm-cp4i-argocd/ibm-cp4i-argocd
   placement:
     placementRef:
       kind: PlacementRule
-      name: ibm-cp4i-argocd-aws-cluster
-      apiGroup: apps.open-cluster-management.io
+      name: ibm-cp4i-argocd
+#      apiGroup: apps.open-cluster-management.io
