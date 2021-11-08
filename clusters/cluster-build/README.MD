@@ -34,4 +34,6 @@ VSPHERE
 - SSH_PRIV_FILE - File path to the SSH Priv Key (eg ~/.ssh/id_rsa)
 - PULL_SECRET - the open shift pull secret
 
-Note: Currently the SSH Public Key is not made secret but is still required to be included in values files.
+
+For more information on creating clusters with RHACM refer to the RedHat Documentation
+https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.3/html/clusters/creating-a-cluster#creating-a-cluster-on-vmware-vsphere
