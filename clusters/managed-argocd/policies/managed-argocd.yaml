@@ -1,16 +1,35 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: openshift-gitops-installed
-  namespace: policy
+  name: policy-managed-argocd
   annotations:
-    policy.open-cluster-management.io/standards: NIST-CSF
-    policy.open-cluster-management.io/categories: PR.DS Data Security
-    policy.open-cluster-management.io/controls: PR.DS-1 Data-at-rest
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
 spec:
   remediationAction: enforce
   disabled: false
   policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-managed-argocd-namespace
+        spec:
+          remediationAction: enforce
+          severity: low
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                kind: Namespace
+                metadata:
+                  name: openshift-gitops
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
@@ -683,13 +702,24 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: argo-deployment-policy
-  namespace: policy
+  name: binding-policy-managed-argocd
 placementRef:
-  name: all-openshift
+  name: placement-policy-managed-argocd
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
-  - name: openshift-gitops-installed
+  - name: policy-managed-argocd
     kind: Policy
     apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-managed-argocd
+spec:
+  clusterConditions:
+    - status: "True"
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - { key: argocd, operator: In, values: ["true"] }

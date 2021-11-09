@@ -6,7 +6,7 @@ metadata:
     region: {{ .Values.provider.region }}
     name: '{{ .Values.cluster }}'
     vendor: OpenShift
-    gitops: enabled
+    argocd: true
   name: '{{ .Values.cluster }}'
 spec:
   hubAcceptsClient: true

@@ -6,5 +6,6 @@ metadata:
     vendor: OpenShift
     name: ocp-swinney-io
     cloud: vSphere
+    argocd: true
 spec:
   hubAcceptsClient: true

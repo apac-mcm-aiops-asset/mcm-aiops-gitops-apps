@@ -5,7 +5,7 @@ metadata:
     cloud: vSphere
     name: '{{ .Values.cluster }}'
     vendor: OpenShift
-    gitops: enabled
+    argocd: true
   name: '{{ .Values.cluster }}'
 spec:
   hubAcceptsClient: true
