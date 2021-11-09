@@ -51,14 +51,21 @@ The password used to encrypt needs to be the same as the password thats stored i
 
 Currently each cloud-connection needs to reference a providerid, that links the provider (Azure, AWS, GCP etc) definition built into MCM, unforuntently these IDs are unique to each MCM installation. 
 
-To get a list of providers and their IDs,the following can be used;
+To get a list of cloud connections and their IDs,the following can be used;
 ```
 curl -k -X GET \
 -H "Authorization: Bearer ${TSA_BEARER_TOKEN}" \
--H "Content-Type: application/json" \
--H "Accept: application/json" \
-"https://${TSA_HOSTNAME}/cam/api/v1/providers?tenantId=${TSA_TENANT_ID}&ace_orgGuid=${MCM_TEAM}" | json_pp
+"https://${TSA_HOSTNAME}/cam/api/v1/cloudconnections?tenantId=${TSA_TENANT_ID}&ace_orgGuid=${MCM_TEAM}&cloudOE_spaceGuid=${NAMESPACE}" | json_pp
+```
+
+To get a list of the templates and their IDs, the following can be used;
+```
+curl -k -X GET \
+-H "Authorization: Bearer ${TSA_BEARER_TOKEN}" \
+"https://${TSA_HOSTNAME}/cam/api/v1/templates?tenantId=${TSA_TENANT_ID}&ace_orgGuid=${MCM_TEAM}&cloudOE_spaceGuid=${NAMESPACE}" |
+json_pp
 ```
 For more information refer to;
-https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=apis-provider-connection#createcc
+https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=apis-provider-connection#getcclist
+https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=apis-template-template-instance#gettemplist
 https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=apis-prerequisites
