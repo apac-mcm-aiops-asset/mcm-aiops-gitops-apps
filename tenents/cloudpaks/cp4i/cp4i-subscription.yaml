@@ -7,6 +7,7 @@ metadata:
     app: ibm-cp4i-argocd
   annotations:
       apps.open-cluster-management.io/github-path: 0-bootstrap/single-cluster/bootstrap.yaml
+      apps.open-cluster-management.io/reconcile-option: replace
 spec:
   channel: ibm-cp4i-argocd/ibm-cp4i-argocd
   placement:
