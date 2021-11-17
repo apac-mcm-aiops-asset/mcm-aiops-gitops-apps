@@ -7,11 +7,10 @@ spec:
   clusterName: ocp-swinney-io
   clusterNamespace: ocp-swinney-io
   clusterLabels:
-    cloud: vSphere
-    vendor: OpenShift
+    cloud: auto-detect
+    vendor: auto-detect
   applicationManager:
     enabled: true
-    argocdCluster: true
   certPolicyController:
     enabled: true
   iamPolicyController:
