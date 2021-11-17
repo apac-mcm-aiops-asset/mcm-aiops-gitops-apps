@@ -1,6 +1,6 @@
 cluster: azure-cluster-aus
 type: azure
-imageName: img4.7.33-x86-64-appsub
+imageName: img4.8.19-x86-64-appsub
 
 provider:
     region: centralus 
