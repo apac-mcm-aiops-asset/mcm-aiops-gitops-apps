@@ -4,14 +4,14 @@ kind: SealedSecret
 metadata:
   creationTimestamp: null
   name: {{ .Values.connection_name }}
-  namespace: openshift-rhacm-providers
+  namespace: openshift-rhacm-credentials
 spec:
   encryptedData:
     metadata: {{ .Values.providerSecret }}
   template:
     metadata:
       name: {{ .Values.connection_name }}
-      namespace: openshift-rhacm-providers
+      namespace: openshift-rhacm-credentials
       labels:
         cluster.open-cluster-management.io/cloudconnection: ''
         cluster.open-cluster-management.io/provider: vmw

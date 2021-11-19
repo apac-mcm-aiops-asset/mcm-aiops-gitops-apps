@@ -68,7 +68,7 @@ sshPublickey: '$ssh_pub_key'
 EOM
 
 #remove the install config from templates so helm doesnt try to install it
-ENC_PROV_CFG=$(echo -n "$provider_config" | kubeseal --raw --name=$VALUES_connection_name --namespace=openshift-rhacm-providers --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
+ENC_PROV_CFG=$(echo -n "$provider_config" | kubeseal --raw --name=$VALUES_connection_name --namespace=openshift-rhacm-credentials --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
 
 # Encrypt the secret using kubeseal and private key from the cluster
 echo "Creating Secrets"
