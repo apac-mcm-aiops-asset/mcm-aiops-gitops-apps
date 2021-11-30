@@ -8,13 +8,14 @@ metadata:
   labels:
     cloud: 'AWS'
     region: '{{ .Values.provider.region }}'
-    vendor: 'OpenShift'
+    vendor: OpenShift
+    cluster.open-cluster-management.io/clusterset: 'all-openshift-clusters'
 spec:
   baseDomain: {{ .Values.provider.baseDomain }}
   clusterName: '{{ .Values.cluster }}'
   controlPlaneConfig:
     servingCertificates: {}
-  installAttemptsLimit: 2
+  installAttemptsLimit: 1
   platform:
     aws:
       credentialsSecretRef:

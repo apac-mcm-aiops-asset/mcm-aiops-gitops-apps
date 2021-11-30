@@ -7,15 +7,15 @@ metadata:
   namespace: '{{ .Values.cluster }}'
   labels:
     cloud: 'vSphere'
-    vendor: 'OpenShift'
+    vendor: OpenShift
     hive.openshift.io/cluster-platform: vsphere
-
+    cluster.open-cluster-management.io/clusterset: 'all-openshift-clusters'
 spec:
   baseDomain: {{ .Values.provider.baseDomain }}
   clusterName: '{{ .Values.cluster }}'
   controlPlaneConfig:
     servingCertificates: {}
-  installAttemptsLimit: 2
+  installAttemptsLimit: 1
   platform:
     vsphere:
       cluster: {{ .Values.provider.vmClusterName }} 
