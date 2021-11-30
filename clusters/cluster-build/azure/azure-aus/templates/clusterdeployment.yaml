@@ -13,6 +13,7 @@ metadata:
 spec:
   baseDomain: {{ .Values.provider.baseDomain}} 
   clusterName: '{{ .Values.cluster }}'
+  powerState: Running
   controlPlaneConfig:
     servingCertificates: {}
   installAttemptsLimit: 1
